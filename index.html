@@ -9,7 +9,7 @@
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content=" Blog Archives Liquid syntax error: Unknown tag &#8216;tag_cloud&#8217; ">
+  <meta name="description" content="Blog Archives About Me A little something about me. Recent Posts Tag Cloud Latest Tweets Status updating&#8230; $.domReady(function(){ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,7 +73,41 @@
 </div>
 <aside class="sidebar">
   
-    Liquid syntax error: Unknown tag &#8216;tag_cloud&#8217;
+    <section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"></span>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("t_taira", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/t_taira" class="twitter-follow-button" data-show-count="false">Follow @t_taira</a>
+  
+</section>
+
+
+
+
+
   
 </aside>
 
