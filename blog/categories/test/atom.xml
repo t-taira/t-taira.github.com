@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[t-taira blog]]></title>
-  <link href="http://t-taira.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: test | t-taira blog]]></title>
+  <link href="http://t-taira.github.com/blog/categories/test/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
   <updated>2012-06-10T20:35:33-07:00</updated>
   <id>http://t-taira.github.com/</id>
@@ -18,7 +18,7 @@
     <link href="http://t-taira.github.com/blog/2012/06/10/hello-octopress/"/>
     <updated>2012-06-10T20:33:00-07:00</updated>
     <id>http://t-taira.github.com/blog/2012/06/10/hello-octopress</id>
-    <content type="html"><![CDATA[<h2>this is test post&#8230;</h2>
+    <content type="html"><![CDATA[<h2>this is test post...</h2>
 
 <p><img src="https://dl.dropbox.com/u/29480473/pig.png" title="" ></p>
 
