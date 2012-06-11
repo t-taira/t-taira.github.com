@@ -4,7 +4,7 @@
   <title><![CDATA[Category: heroku | t.taira blog]]></title>
   <link href="http://t-taira.github.com/blog/categories/heroku/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-11T01:08:25-07:00</updated>
+  <updated>2012-06-11T01:40:57-07:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -44,7 +44,8 @@
 
 <h2>Heroku Scheduler</h2>
 
-<p>Every 10 minutes / Hourly / Daily が設定可能</p>
+<p>Every 10 minutes / Hourly / Daily が設定可能
+<img src="https://dl.dropbox.com/u/29480473/octopress/heroku_scheduler.png"></p>
 
 <pre><code>$ heroku addons:add scheduler:standard
 </code></pre>
@@ -62,6 +63,8 @@
 
 <pre><code>$ heroku addons:add newrelic:standard
 </code></pre>
+
+<p>Sorce: <a href="https://addons.heroku.com/">Heroku | Add-ons</a></p>
 ]]></content>
   </entry>
   

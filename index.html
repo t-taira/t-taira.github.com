@@ -9,7 +9,10 @@
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="Log リアルタイムログを表示する $ heroku logs --tail メンテナンス画面への切換え ON $ heroku maintenance:on OFF $ heroku maintenance:off タイムゾーンの変更 $ heroku config:add TZ=Asia/ &hellip;">
+  <meta name="description" content="GitHubで新しくリポジトリを作成する Repository nameは、例えば「xxxxx@github.com」のような形式で登録する SSH Keyの設定 SSH Kyesの登録で生成したキーを登録する $ cd ~/.ssh
+$ ls
+$ mkdir key_backup
+$ cp &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +85,101 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/06/11/hazimetefalseoctopress/">はじめてのOctopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-11T01:18:00-07:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/11/hazimetefalseoctopress/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>GitHubで新しくリポジトリを作成する</h2>
+
+<p>Repository nameは、例えば「xxxxx@github.com」のような形式で登録する</p>
+
+<p><img src="https://dl.dropbox.com/u/29480473/octopress/github_create_repo.png"></p>
+
+<h2>SSH Keyの設定</h2>
+
+<p><a href="https://github.com/settings/ssh">SSH Kyesの登録</a>で生成したキーを登録する</p>
+
+<pre><code>$ cd ~/.ssh
+$ ls
+$ mkdir key_backup
+$ cp id_rsa* key_backup
+$ rm id_rsa*
+$ ssh-keygen -t rsa -C "xxxxxx@gmail.com"
+</code></pre>
+
+<h2>Octopressのインストール</h2>
+
+<pre><code>$ cd ~
+$ git clone git://github.com/imathis/octopress.git octopress
+$ cd octopress
+
+$ sudo gem install bundler
+$ sudo bundle install
+$ rake install
+
+$ rake setup_github_pages
+Enter the read/write url for your repository: git@github.com:username/username.github.com.git
+
+$ rake generate
+$ rake deploy
+</code></pre>
+
+<h2>新しく記事を作成する</h2>
+
+<pre><code>$ rake new_post['test']
+
+$ mkdir -p source/_posts
+Creating new post: source/_posts/2012-06-11-test.markdown 
+
+$ vi source/_posts/2012-06-11-test.markdown  
+---
+layout: post
+title: "test"
+date: 2012-06-11 01:15
+comments: true
+categories: test
+---
+
+hello octopress
+</code></pre>
+
+<h2>完成</h2>
+
+<p>できあがりはこんな感じ。
+<img src="https://dl.dropbox.com/u/29480473/octopress/octopress_top.png"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">Herokuのコマンド、Add-onsのメモ</a></h1>
     
     
@@ -133,7 +231,8 @@
 
 <h2>Heroku Scheduler</h2>
 
-<p>Every 10 minutes / Hourly / Daily が設定可能</p>
+<p>Every 10 minutes / Hourly / Daily が設定可能
+<img src="https://dl.dropbox.com/u/29480473/octopress/heroku_scheduler.png"></p>
 
 <pre><code>$ heroku addons:add scheduler:standard
 </code></pre>
@@ -151,6 +250,8 @@
 
 <pre><code>$ heroku addons:add newrelic:standard
 </code></pre>
+
+<p>Sorce: <a href="https://addons.heroku.com/">Heroku | Add-ons</a></p>
 </div>
   
   
@@ -219,6 +320,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/11/hazimetefalseoctopress/">はじめてのOctopress</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">Herokuのコマンド、Add-onsのメモ</a>
       </li>
     
@@ -230,7 +335,7 @@
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 160.0%'>octopress(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
 </section>
 
 <section>
