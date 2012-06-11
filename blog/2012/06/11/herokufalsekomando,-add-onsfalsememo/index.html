@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - t.taira blog</title>
+  <title>Herokuのコマンド、Add-onsのメモ - t.taira blog</title>
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="Blog Archive 2012 Herokuのコマンド、Add-onsのメモ
-Jun 11 2012 posted in heroku hello-octopress
-Jun 10 2012 posted in test About Me Java, Ruby, &hellip;">
+  <meta name="description" content="Log リアルタイムログを表示する $ heroku logs --tail メンテナンス画面への切換え ON $ heroku maintenance:on OFF $ heroku maintenance:off タイムゾーンの変更 $ heroku config:add TZ=Asia/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ Jun 10 2012 posted in test About Me Java, Ruby, &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://t-taira.github.com/blog/archives/">
+  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,50 +75,140 @@ Jun 10 2012 posted in test About Me Java, Ruby, &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Herokuのコマンド、Add-onsのメモ</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-11T00:47:00-07:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><h2>Log</h2>
 
-  
-  <h2>2012</h2>
+<p>リアルタイムログを表示する</p>
 
-<article>
-  
-<h1><a href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">Herokuのコマンド、Add-onsのメモ</a></h1>
-<time datetime="2012-06-11T00:47:00-07:00" pubdate><span class='month'>Jun</span> <span class='day'>11</span> <span class='year'>2012</span></time>
+<pre><code>$ heroku logs --tail
+</code></pre>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/heroku/'>heroku</a></span>
-</footer>
+<h2>メンテナンス画面への切換え</h2>
 
+<p>ON</p>
 
-</article>
+<pre><code>$ heroku maintenance:on
+</code></pre>
 
+<p>OFF</p>
 
+<pre><code>$ heroku maintenance:off
+</code></pre>
 
-<article>
-  
-<h1><a href="/blog/2012/06/10/hello-octopress/">hello-octopress</a></h1>
-<time datetime="2012-06-10T20:33:00-07:00" pubdate><span class='month'>Jun</span> <span class='day'>10</span> <span class='year'>2012</span></time>
+<h2>タイムゾーンの変更</h2>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test/'>test</a></span>
-</footer>
+<pre><code>$ heroku config:add TZ=Asia/Tokyo
+</code></pre>
 
+<h2>Heroku Scheduler</h2>
 
-</article>
+<p>Every 10 minutes / Hourly / Daily が設定可能</p>
 
+<pre><code>$ heroku addons:add scheduler:standard
+</code></pre>
+
+<h2>SendGrid</h2>
+
+<p>1日200通（無料）</p>
+
+<pre><code>$ heroku addons:add sendgrid:starter
+</code></pre>
+
+<h2>New Relic</h2>
+
+<p>パフォーマンス計測と運用状況のモニタリング</p>
+
+<pre><code>$ heroku addons:add newrelic:standard
+</code></pre>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">t-taira</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-11T00:47:00-07:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/heroku/'>heroku</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/06/10/hello-octopress/" title="Previous Post: hello-octopress">&laquo; hello-octopress</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -204,7 +292,10 @@ new TWTR.Widget({
       var disqus_shortname = 'ttairablog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/';
+        var disqus_url = 'http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

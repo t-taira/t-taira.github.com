@@ -9,8 +9,7 @@
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="this is test post&#8230; googleへのリンク
-">
+  <meta name="description" content="Log リアルタイムログを表示する $ heroku logs --tail メンテナンス画面への切換え ON $ heroku maintenance:on OFF $ heroku maintenance:off タイムゾーンの変更 $ heroku config:add TZ=Asia/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +82,87 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">Herokuのコマンド、Add-onsのメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-11T00:47:00-07:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Log</h2>
+
+<p>リアルタイムログを表示する</p>
+
+<pre><code>$ heroku logs --tail
+</code></pre>
+
+<h2>メンテナンス画面への切換え</h2>
+
+<p>ON</p>
+
+<pre><code>$ heroku maintenance:on
+</code></pre>
+
+<p>OFF</p>
+
+<pre><code>$ heroku maintenance:off
+</code></pre>
+
+<h2>タイムゾーンの変更</h2>
+
+<pre><code>$ heroku config:add TZ=Asia/Tokyo
+</code></pre>
+
+<h2>Heroku Scheduler</h2>
+
+<p>Every 10 minutes / Hourly / Daily が設定可能</p>
+
+<pre><code>$ heroku addons:add scheduler:standard
+</code></pre>
+
+<h2>SendGrid</h2>
+
+<p>1日200通（無料）</p>
+
+<pre><code>$ heroku addons:add sendgrid:starter
+</code></pre>
+
+<h2>New Relic</h2>
+
+<p>パフォーマンス計測と運用状況のモニタリング</p>
+
+<pre><code>$ heroku addons:add newrelic:standard
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/06/10/hello-octopress/">Hello-octopress</a></h1>
     
     
@@ -131,11 +211,16 @@
     <section>
   <h1>About Me</h1>
   <div><img src="https://dl.dropbox.com/u/29480473/profile.jpg"></div>  
-  <p>自称Service Designer.</p>
+  <p>Java, Ruby, PHPプログラマ改めService Designerです。
+不動産投資にも興味があります。夢は一棟マンションの大家さん。</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">Herokuのコマンド、Add-onsのメモ</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/06/10/hello-octopress/">hello-octopress</a>
@@ -145,7 +230,7 @@
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
 </section>
 
 <section>
