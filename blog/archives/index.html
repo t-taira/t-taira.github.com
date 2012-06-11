@@ -120,6 +120,35 @@ Jun 10 2012 posted in test About Me A little something about me. Recent Posts he
 
 <section>
   <h1>Latest Tweets</h1>
+<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 30000,
+  width: 250,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#fff',
+      color: '#333'
+    },
+    tweets: {
+      background: '#fff',
+      color: '#333',
+      links: '#990000'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    behavior: 'all'
+  }
+}).render().setUser('t_taira').start();
+</script>
+<!--
   <ul id="tweets">
     <li class="loading">Status updating...</li>
   </ul>
@@ -133,6 +162,7 @@ Jun 10 2012 posted in test About Me A little something about me. Recent Posts he
     <a href="http://twitter.com/t_taira" class="twitter-follow-button" data-show-count="false">Follow @t_taira</a>
   
 </section>
+-->
 
 
 
