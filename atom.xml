@@ -4,7 +4,7 @@
   <title><![CDATA[t.taira blog]]></title>
   <link href="http://t-taira.github.com/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-16T17:31:53-07:00</updated>
+  <updated>2012-06-16T17:38:10-07:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu12.04にsubversionをインストール]]></title>
+    <link href="http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install/"/>
+    <updated>2012-06-17T09:00:00-07:00</updated>
+    <id>http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install</id>
+    <content type="html"><![CDATA[<h2>Apache, subversionのインストール</h2>
+
+<pre><code>sudo apt-get install apache2 subversion subversion-tools libapache2-svn
+
+sudo mkdir /var/lib/svn
+sudo svnadmin create /var/lib/svn/repos
+sudo chown -R www-data. /var/lib/svn/
+
+sudo htpasswd -c /etc/apache2/dav_svn.passwd [username]
+New password: 
+Re-type new password: 
+Adding password for user [username]
+
+sudo vi /etc/apache2/mods-enabled/dav_svn.conf
+&lt;Location /svn&gt;
+        DAV svn
+        SVNParentPath /var/lib/svn
+
+        AuthType Basic
+        AuthName "Subversion Repository"
+        AuthUserFile /etc/apache2/dav_svn.passwd
+        Require valid-user
+&lt;/Location&gt;
+
+sudo service apache2 restart
+</code></pre>
+
+<h2>確認</h2>
+
+<p>http://[Ubuntu12.04のIPアドレス]/svn/repos/</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu12.04にRoR環境を構築する]]></title>

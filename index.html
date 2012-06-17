@@ -9,7 +9,8 @@
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="pkg install sudo apt-get install build-essential bison openssl libreadline5 libreadline-dev zlib1g zlib1g-dev libssl-dev libsqlite3-0 libsqlite3-dev &hellip;">
+  <meta name="description" content="Apache, subversionのインストール sudo apt-get install apache2 subversion subversion-tools libapache2-svn sudo mkdir /var/lib/svn
+sudo svnadmin create /var/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +77,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/17/ubuntu12-dot-04-subversion-install/">Ubuntu12.04にsubversionをインストール</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-17T09:00:00-07:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/17/ubuntu12-dot-04-subversion-install/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Apache, subversionのインストール</h2>
+
+<pre><code>sudo apt-get install apache2 subversion subversion-tools libapache2-svn
+
+sudo mkdir /var/lib/svn
+sudo svnadmin create /var/lib/svn/repos
+sudo chown -R www-data. /var/lib/svn/
+
+sudo htpasswd -c /etc/apache2/dav_svn.passwd [username]
+New password: 
+Re-type new password: 
+Adding password for user [username]
+
+sudo vi /etc/apache2/mods-enabled/dav_svn.conf
+&lt;Location /svn&gt;
+        DAV svn
+        SVNParentPath /var/lib/svn
+
+        AuthType Basic
+        AuthName "Subversion Repository"
+        AuthUserFile /etc/apache2/dav_svn.passwd
+        Require valid-user
+&lt;/Location&gt;
+
+sudo service apache2 restart
+</code></pre>
+
+<h2>確認</h2>
+
+<p>http://[Ubuntu12.04のIPアドレス]/svn/repos/</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -415,6 +483,10 @@ hello octopress
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/17/ubuntu12-dot-04-subversion-install/">Ubuntu12.04にsubversionをインストール</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/">Ubuntu12.04にRoR環境を構築する</a>
       </li>
     
@@ -434,7 +506,7 @@ hello octopress
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 160.0%'>octopress(1)</a> <a href='/blog/categories/rails' style='font-size: 160.0%'>rails(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 160.0%'>octopress(1)</a> <a href='/blog/categories/rails' style='font-size: 160.0%'>rails(1)</a> <a href='/blog/categories/subversion' style='font-size: 160.0%'>subversion(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
 </section>
 
 <section>

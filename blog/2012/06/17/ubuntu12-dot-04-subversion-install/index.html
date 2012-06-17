@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>はじめてのOctopress - t.taira blog</title>
+  <title>Ubuntu12.04にsubversionをインストール - t.taira blog</title>
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="GitHubで新しくリポジトリを作成する Repository nameは「xxxxx@github.com」のような形式で登録する SSH Keyの設定 SSH Kyesで、生成したキーを登録する $ cd ~/.ssh
-$ ls
-$ mkdir key_backup
-$ cp id_rsa* &hellip;">
+  <meta name="description" content="Apache, subversionのインストール sudo apt-get install apache2 subversion subversion-tools libapache2-svn sudo mkdir /var/lib/svn
+sudo svnadmin create /var/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@ $ cp id_rsa* &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/11/hazimetefalseoctopress/">
+  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -82,7 +80,7 @@ $ cp id_rsa* &hellip;">
   
   <header>
     
-      <h1 class="entry-title">はじめてのOctopress</h1>
+      <h1 class="entry-title">Ubuntu12.04にsubversionをインストール</h1>
     
     
       <p class="meta">
@@ -98,7 +96,7 @@ $ cp id_rsa* &hellip;">
   
 
 
-<time datetime="2012-06-11T01:18:00-07:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+<time datetime="2012-06-17T09:00:00-07:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -107,66 +105,36 @@ $ cp id_rsa* &hellip;">
   </header>
 
 
-<div class="entry-content"><h2>GitHubで新しくリポジトリを作成する</h2>
+<div class="entry-content"><h2>Apache, subversionのインストール</h2>
 
-<p>Repository nameは「xxxxx@github.com」のような形式で登録する</p>
+<pre><code>sudo apt-get install apache2 subversion subversion-tools libapache2-svn
 
-<p><img src="https://dl.dropbox.com/u/29480473/octopress/github_create_repo.png"></p>
+sudo mkdir /var/lib/svn
+sudo svnadmin create /var/lib/svn/repos
+sudo chown -R www-data. /var/lib/svn/
 
-<h2>SSH Keyの設定</h2>
+sudo htpasswd -c /etc/apache2/dav_svn.passwd [username]
+New password: 
+Re-type new password: 
+Adding password for user [username]
 
-<p><a href="https://github.com/settings/ssh">SSH Kyes</a>で、生成したキーを登録する</p>
+sudo vi /etc/apache2/mods-enabled/dav_svn.conf
+&lt;Location /svn&gt;
+        DAV svn
+        SVNParentPath /var/lib/svn
 
-<pre><code>$ cd ~/.ssh
-$ ls
-$ mkdir key_backup
-$ cp id_rsa* key_backup
-$ rm id_rsa*
-$ ssh-keygen -t rsa -C "xxxxxx@gmail.com"
+        AuthType Basic
+        AuthName "Subversion Repository"
+        AuthUserFile /etc/apache2/dav_svn.passwd
+        Require valid-user
+&lt;/Location&gt;
+
+sudo service apache2 restart
 </code></pre>
 
-<h2>Octopressのインストール</h2>
+<h2>確認</h2>
 
-<pre><code>$ cd ~
-$ git clone git://github.com/imathis/octopress.git octopress
-$ cd octopress
-
-$ sudo gem install bundler
-$ sudo bundle install
-$ rake install
-
-$ rake setup_github_pages
-Enter the read/write url for your repository: git@github.com:username/username.github.com.git
-
-$ rake generate
-$ rake deploy
-</code></pre>
-
-<h2>新しく記事を作成する</h2>
-
-<pre><code>$ rake new_post['test']
-
-$ mkdir -p source/_posts
-Creating new post: source/_posts/2012-06-11-test.markdown 
-
-$ vi source/_posts/2012-06-11-test.markdown  
----
-layout: post
-title: "test"
-date: 2012-06-11 01:15
-comments: true
-categories: test
----
-
-hello octopress
-</code></pre>
-
-<h2>完成</h2>
-
-<p>できあがりはこんな感じ。
-<img src="https://dl.dropbox.com/u/29480473/octopress/octopress_top.png"></p>
-
-<p>Source: <a href="http://octopress.org/">Octopress</a></p>
+<p>http://[Ubuntu12.04のIPアドレス]/svn/repos/</p>
 </div>
 
 
@@ -189,12 +157,12 @@ hello octopress
   
 
 
-<time datetime="2012-06-11T01:18:00-07:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+<time datetime="2012-06-17T09:00:00-07:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+    <a class='category' href='/blog/categories/subversion/'>subversion</a>
   
 </span>
 
@@ -203,7 +171,7 @@ hello octopress
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/11/hazimetefalseoctopress/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/11/hazimetefalseoctopress/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -216,10 +184,8 @@ hello octopress
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" title="Previous Post: Herokuのコマンド、Add-onsのメモ">&laquo; Herokuのコマンド、Add-onsのメモ</a>
+        <a class="basic-alignment left" href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/" title="Previous Post: Ubuntu12.04にRoR環境を構築する">&laquo; Ubuntu12.04にRoR環境を構築する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/" title="Next Post: Ubuntu12.04にRoR環境を構築する">Ubuntu12.04にRoR環境を構築する &raquo;</a>
       
     </p>
   </footer>
@@ -326,8 +292,8 @@ new TWTR.Widget({
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/11/hazimetefalseoctopress/';
-        var disqus_url = 'http://t-taira.github.com/blog/2012/06/11/hazimetefalseoctopress/';
+        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install/';
+        var disqus_url = 'http://t-taira.github.com/blog/2012/06/17/ubuntu12-dot-04-subversion-install/';
         var disqus_script = 'embed.js';
       
     (function () {
