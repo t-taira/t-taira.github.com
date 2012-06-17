@@ -118,9 +118,9 @@
 
 <pre><code>sudo apt-get install samba
 
-sudo smbpasswd -a haladmin
-sudo mkdir /home/haladmin/samba
-sudo chmod 777 /home/haladmin/samba
+sudo smbpasswd -a [username]
+sudo mkdir /home/[username]/samba
+sudo chmod 777 /home/[username]/samba
 
 sudo vim /etc/samba/smb.conf 
 
@@ -131,7 +131,7 @@ browseable = no
 writable = yes
 create mask = 0744
 directory mask = 0755
-path = /home/haladmin/samba
+path = /home/[username]/samba
 guest ok = yes 
 share modes = no
 
