@@ -4,7 +4,7 @@
   <title><![CDATA[t.taira blog]]></title>
   <link href="http://t-taira.github.com/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-16T17:31:00-07:00</updated>
+  <updated>2012-06-16T17:31:53-07:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -74,8 +74,8 @@ default-character-set=utf8
 <pre><code>sudo apt-get install curl git-core
 curl -L get.rvm.io | bash -s stable
 source ~/.rvm/scripts/rvm
-rvm install 1.9.3-p125
-rvm use 1.9.3-p125 --default
+rvm install 1.9.3
+rvm use 1.9.3 --default
 </code></pre>
 ]]></content>
   </entry>
