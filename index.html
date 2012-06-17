@@ -9,10 +9,7 @@
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="GitHubで新しくリポジトリを作成する Repository nameは「xxxxx@github.com」のような形式で登録する SSH Keyの設定 SSH Kyesで、生成したキーを登録する $ cd ~/.ssh
-$ ls
-$ mkdir key_backup
-$ cp id_rsa* &hellip;">
+  <meta name="description" content="pkg install sudo apt-get install build-essential bison openssl libreadline5 libreadline-dev zlib1g zlib1g-dev libssl-dev libsqlite3-0 libsqlite3-dev &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +76,102 @@ $ cp id_rsa* &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/">Ubuntu12.04にRoR環境を構築する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-16T17:08:00-07:00" pubdate data-updated="true">Jun 16<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>pkg install</h2>
+
+<pre><code>sudo apt-get install build-essential bison openssl libreadline5 libreadline-dev zlib1g zlib1g-dev libssl-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev vim 
+</code></pre>
+
+<h2>ssh</h2>
+
+<pre><code>sudo apt-get install openssh-server
+</code></pre>
+
+<h2>samba</h2>
+
+<pre><code>sudo apt-get install samba
+
+sudo smbpasswd -a haladmin
+sudo mkdir /home/haladmin/samba
+sudo chmod 777 /home/haladmin/samba
+
+sudo vim /etc/samba/smb.conf 
+
+workgroup = WORKGROUP
+hosts allow = 192.168.1. 127.
+[homes]
+browseable = no
+writable = yes
+create mask = 0744
+directory mask = 0755
+path = /home/haladmin/samba
+guest ok = yes 
+share modes = no
+
+sudo /etc/init.d/smbd restart
+</code></pre>
+
+<h2>mysql</h2>
+
+<pre><code>sudo apt-get install mysql-server libmysql-ruby
+
+sudo vim /etc/mysql/my.cnf
+
+[client]
+default-character-set=utf8
+
+[mysqld]
+character-set-server=utf8
+skip-character-set-client-handshake
+
+[mysql]
+default-character-set=utf8
+</code></pre>
+
+<h2>rvm</h2>
+
+<pre><code>sudo apt-get install curl git-core
+curl -L get.rvm.io | bash -s stable
+source ~/.rvm/scripts/rvm
+rvm install 1.9.3-p125
+rvm use 1.9.3-p125 --default
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -322,6 +415,10 @@ hello octopress
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/">Ubuntu12.04にRoR環境を構築する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/11/hazimetefalseoctopress/">はじめてのOctopress</a>
       </li>
     
@@ -337,7 +434,7 @@ hello octopress
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 160.0%'>octopress(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 160.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 160.0%'>octopress(1)</a> <a href='/blog/categories/rails' style='font-size: 160.0%'>rails(1)</a> <a href='/blog/categories/test' style='font-size: 160.0%'>test(1)</a> </span>
 </section>
 
 <section>
