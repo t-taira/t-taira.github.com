@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Herokuのコマンド、Add-onsのメモ - t.taira blog</title>
+  <title>Ubuntu12.04にRedmine2.0をインストール - t.taira blog</title>
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="Log リアルタイムログを表示する $ heroku logs --tail メンテナンス画面への切換え ON $ heroku maintenance:on OFF $ heroku maintenance:off タイムゾーンの変更 $ heroku config:add TZ=Asia/ &hellip;">
+  <meta name="description" content="install 必要なライブラリをインストール sudo aptitude install imagemagick libimagemagick libmagickcore libmagickcore-dev libmagickwand-dev Redmine2.0をインストール svn &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">
+  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/17/redmine-install/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,7 +79,7 @@
   
   <header>
     
-      <h1 class="entry-title">Herokuのコマンド、Add-onsのメモ</h1>
+      <h1 class="entry-title">Ubuntu12.04にRedmine2.0をインストール</h1>
     
     
       <p class="meta">
@@ -95,7 +95,7 @@
   
 
 
-<time datetime="2012-06-11T00:47:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+<time datetime="2012-06-17T17:15:00+09:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -104,53 +104,33 @@
   </header>
 
 
-<div class="entry-content"><h2>Log</h2>
+<div class="entry-content"><h2>install</h2>
 
-<p>リアルタイムログを表示する</p>
+<p>必要なライブラリをインストール</p>
 
-<pre><code>$ heroku logs --tail
+<pre><code>sudo aptitude install imagemagick libimagemagick libmagickcore libmagickcore-dev libmagickwand-dev
 </code></pre>
 
-<h2>メンテナンス画面への切換え</h2>
+<h2>Redmine2.0をインストール</h2>
 
-<p>ON</p>
+<pre><code>svn checkout http://redmine.rubyforge.org/svn/branches/2.0-stable redmine
+cd redmine/
+mv config/database.yml.example config/database.yml
 
-<pre><code>$ heroku maintenance:on
+vim config/database.yml
+production:
+    adapter: mysql2 # ココ修正
+    database: redmine_production
+    host: localhost
+    username: root
+    password: 
+    encoding: utf8
+
+    bundle install --without development test postgresql sqlite
+    rake generate_secret_token
+    RAILS_ENV=production rake db:create
+    RAILS_ENV=production rake db:migrate
 </code></pre>
-
-<p>OFF</p>
-
-<pre><code>$ heroku maintenance:off
-</code></pre>
-
-<h2>タイムゾーンの変更</h2>
-
-<pre><code>$ heroku config:add TZ=Asia/Tokyo
-</code></pre>
-
-<h2>Heroku Scheduler</h2>
-
-<p>Every 10 minutes / Hourly / Daily が設定可能
-<img src="https://dl.dropbox.com/u/29480473/octopress/heroku_scheduler.png"></p>
-
-<pre><code>$ heroku addons:add scheduler:standard
-</code></pre>
-
-<h2>SendGrid</h2>
-
-<p>1日200通（無料）</p>
-
-<pre><code>$ heroku addons:add sendgrid:starter
-</code></pre>
-
-<h2>New Relic</h2>
-
-<p>パフォーマンス計測と運用状況のモニタリング</p>
-
-<pre><code>$ heroku addons:add newrelic:standard
-</code></pre>
-
-<p>Source: <a href="https://addons.heroku.com/">Heroku | Add-ons</a></p>
 </div>
 
 
@@ -173,12 +153,12 @@
   
 
 
-<time datetime="2012-06-11T00:47:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+<time datetime="2012-06-17T17:15:00+09:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/heroku/'>heroku</a>
+    <a class='category' href='/blog/categories/redmine/'>redmine</a>
   
 </span>
 
@@ -187,7 +167,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/17/redmine-install/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/17/redmine-install/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -200,10 +180,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/06/10/hello-octopress/" title="Previous Post: hello-octopress">&laquo; hello-octopress</a>
+        <a class="basic-alignment left" href="/blog/2012/06/17/ubuntu12-dot-04-subversion-install/" title="Previous Post: Ubuntu12.04にsubversionをインストール">&laquo; Ubuntu12.04にsubversionをインストール</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/06/11/hazimetefalseoctopress/" title="Next Post: はじめてのOctopress">はじめてのOctopress &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/06/17/unicorn-plus-apache/" title="Next Post: Unicorn+ApacheでRailsを動かす">Unicorn+ApacheでRailsを動かす &raquo;</a>
       
     </p>
   </footer>
@@ -310,8 +290,8 @@ new TWTR.Widget({
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/';
-        var disqus_url = 'http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/';
+        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/17/redmine-install/';
+        var disqus_url = 'http://t-taira.github.com/blog/2012/06/17/redmine-install/';
         var disqus_script = 'embed.js';
       
     (function () {

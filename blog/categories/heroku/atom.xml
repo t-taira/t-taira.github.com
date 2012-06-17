@@ -4,7 +4,7 @@
   <title><![CDATA[Category: heroku | t.taira blog]]></title>
   <link href="http://t-taira.github.com/blog/categories/heroku/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-16T17:38:10-07:00</updated>
+  <updated>2012-06-17T17:29:50+09:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Herokuのコマンド、Add-onsのメモ]]></title>
     <link href="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/"/>
-    <updated>2012-06-11T00:47:00-07:00</updated>
+    <updated>2012-06-11T00:47:00+09:00</updated>
     <id>http://t-taira.github.com/blog/2012/06/11/herokufalsekomando,-add-onsfalsememo</id>
     <content type="html"><![CDATA[<h2>Log</h2>
 
@@ -64,7 +64,7 @@
 <pre><code>$ heroku addons:add newrelic:standard
 </code></pre>
 
-<p>Sorce: <a href="https://addons.heroku.com/">Heroku | Add-ons</a></p>
+<p>Source: <a href="https://addons.heroku.com/">Heroku | Add-ons</a></p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: unicorn | t.taira blog]]></title>
+  <link href="http://t-taira.github.com/blog/categories/unicorn/atom.xml" rel="self"/>
+  <link href="http://t-taira.github.com/"/>
+  <updated>2012-06-17T17:29:50+09:00</updated>
+  <id>http://t-taira.github.com/</id>
+  <author>
+    <name><![CDATA[t-taira]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Unicorn+ApacheでRailsを動かす]]></title>
+    <link href="http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache/"/>
+    <updated>2012-06-17T17:27:00+09:00</updated>
+    <id>http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache</id>
+    <content type="html"><![CDATA[<h2>Apacheのモジュールを有効化</h2>
+
+<pre><code>sudo a2enmod proxy
+sudo a2enmod proxy_balancer
+sudo a2enmod proxy_http
+sudo a2enmod rewrite
+
+sudo /etc/init.d/apache2 restart
+</code></pre>
+
+<h2>Unicornをインストール</h2>
+
+<pre><code>gem install unicorn
+</code></pre>
+
+<h2>Apacheの設定</h2>
+
+<pre><code>sudo vim /etc/apache2/conf.d/railsapp.conf
+
+&lt;VirtualHost *:80&gt;
+    ServerName domain.com       
+    ServerAlias www.domain.com
+
+    # Point this to your public folder of teambox
+    DocumentRoot /home/username/railsapp/public
+
+    RewriteEngine On
+
+    &lt;Proxy balancer://railsapp&gt;
+    BalancerMember http://127.0.0.1:3000 loadfactor=10
+    BalancerMember http://127.0.0.1:3001 loadfactor=10
+    BalancerMember http://127.0.0.1:3002 loadfactor=10
+&lt;/Proxy&gt;
+
+# Redirect all non-static requests to thin
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+RewriteRule ^/(.*)$ balancer://railsapp%{REQUEST_URI} [P,QSA,L]
+
+ProxyPass / balancer://railsapp/
+ProxyPassReverse / balancer://railsapp/
+ProxyPreserveHost on
+
+&lt;Proxy *&gt;
+    Order deny,allow
+    Allow from all
+&lt;/Proxy&gt;
+
+# Custom log file locations
+ErrorLog  /home/username/railsapp/log/error.log
+CustomLog /home/username/railsapp/access.log combined
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<h2>Unicornの設定</h2>
+
+<pre><code>vim config/unicorn.conf
+# See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
+# See also http://unicorn.bogomips.org/examples/unicorn.conf.rb for
+rails_env = 'production'
+worker_processes 3
+working_directory '/home/username/railsapp'
+port = 3000
+listen port, :tcp_nopush =&gt; true
+timeout 30
+pid 'tmp/pids/unicorn.pid'
+preload_app  true
+stderr_path 'log/unicorn.log'
+stdout_path 'log/unicorn.log'
+
+before_fork do |server, worker|
+defined?(ActiveRecord::Base) and
+　　ActiveRecord::Base.connection.disconnect!
+end
+
+after_fork do |server, worker|
+defined?(ActiveRecord::Base) and
+　　ActiveRecord::Base.establish_connection
+end
+</code></pre>
+
+<h2>Unicornを起動</h2>
+
+<pre><code>unicorn_rails -D -c /home/username/railsapp/config/unicorn.conf
+</code></pre>
+
+<h2>Apacheを起動</h2>
+
+<pre><code>sudo apt-get install libapache2-mod-xsendfile
+sudo /etc/init.d/apache2 restart
+</code></pre>
+
+<p>Sorce:
+<a href="https://github.com/teambox/teambox/wiki/Installing-on-Ubuntu-using-Apache-and-Unicorn">Installing on Ubuntu using Apache and Unicorn</a></p>
+]]></content>
+  </entry>
+  
+</feed>

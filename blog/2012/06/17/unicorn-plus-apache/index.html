@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Herokuのコマンド、Add-onsのメモ - t.taira blog</title>
+  <title>Unicorn+ApacheでRailsを動かす - t.taira blog</title>
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="Log リアルタイムログを表示する $ heroku logs --tail メンテナンス画面への切換え ON $ heroku maintenance:on OFF $ heroku maintenance:off タイムゾーンの変更 $ heroku config:add TZ=Asia/ &hellip;">
+  <meta name="description" content="Apacheのモジュールを有効化 sudo a2enmod proxy
+sudo a2enmod proxy_balancer
+sudo a2enmod proxy_http
+sudo a2enmod rewrite sudo /etc/init.d/apache2 restart &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/">
+  <link rel="canonical" href="http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">Herokuのコマンド、Add-onsのメモ</h1>
+      <h1 class="entry-title">Unicorn+ApacheでRailsを動かす</h1>
     
     
       <p class="meta">
@@ -95,7 +98,7 @@
   
 
 
-<time datetime="2012-06-11T00:47:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+<time datetime="2012-06-17T17:27:00+09:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -104,53 +107,99 @@
   </header>
 
 
-<div class="entry-content"><h2>Log</h2>
+<div class="entry-content"><h2>Apacheのモジュールを有効化</h2>
 
-<p>リアルタイムログを表示する</p>
+<pre><code>sudo a2enmod proxy
+sudo a2enmod proxy_balancer
+sudo a2enmod proxy_http
+sudo a2enmod rewrite
 
-<pre><code>$ heroku logs --tail
+sudo /etc/init.d/apache2 restart
 </code></pre>
 
-<h2>メンテナンス画面への切換え</h2>
+<h2>Unicornをインストール</h2>
 
-<p>ON</p>
-
-<pre><code>$ heroku maintenance:on
+<pre><code>gem install unicorn
 </code></pre>
 
-<p>OFF</p>
+<h2>Apacheの設定</h2>
 
-<pre><code>$ heroku maintenance:off
+<pre><code>sudo vim /etc/apache2/conf.d/railsapp.conf
+
+&lt;VirtualHost *:80&gt;
+    ServerName domain.com       
+    ServerAlias www.domain.com
+
+    # Point this to your public folder of teambox
+    DocumentRoot /home/username/railsapp/public
+
+    RewriteEngine On
+
+    &lt;Proxy balancer://railsapp&gt;
+    BalancerMember http://127.0.0.1:3000 loadfactor=10
+    BalancerMember http://127.0.0.1:3001 loadfactor=10
+    BalancerMember http://127.0.0.1:3002 loadfactor=10
+&lt;/Proxy&gt;
+
+# Redirect all non-static requests to thin
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+RewriteRule ^/(.*)$ balancer://railsapp%{REQUEST_URI} [P,QSA,L]
+
+ProxyPass / balancer://railsapp/
+ProxyPassReverse / balancer://railsapp/
+ProxyPreserveHost on
+
+&lt;Proxy *&gt;
+    Order deny,allow
+    Allow from all
+&lt;/Proxy&gt;
+
+# Custom log file locations
+ErrorLog  /home/username/railsapp/log/error.log
+CustomLog /home/username/railsapp/access.log combined
+&lt;/VirtualHost&gt;
 </code></pre>
 
-<h2>タイムゾーンの変更</h2>
+<h2>Unicornの設定</h2>
 
-<pre><code>$ heroku config:add TZ=Asia/Tokyo
+<pre><code>vim config/unicorn.conf
+# See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
+# See also http://unicorn.bogomips.org/examples/unicorn.conf.rb for
+rails_env = 'production'
+worker_processes 3
+working_directory '/home/username/railsapp'
+port = 3000
+listen port, :tcp_nopush =&gt; true
+timeout 30
+pid 'tmp/pids/unicorn.pid'
+preload_app  true
+stderr_path 'log/unicorn.log'
+stdout_path 'log/unicorn.log'
+
+before_fork do |server, worker|
+defined?(ActiveRecord::Base) and
+　　ActiveRecord::Base.connection.disconnect!
+end
+
+after_fork do |server, worker|
+defined?(ActiveRecord::Base) and
+　　ActiveRecord::Base.establish_connection
+end
 </code></pre>
 
-<h2>Heroku Scheduler</h2>
+<h2>Unicornを起動</h2>
 
-<p>Every 10 minutes / Hourly / Daily が設定可能
-<img src="https://dl.dropbox.com/u/29480473/octopress/heroku_scheduler.png"></p>
-
-<pre><code>$ heroku addons:add scheduler:standard
+<pre><code>unicorn_rails -D -c /home/username/railsapp/config/unicorn.conf
 </code></pre>
 
-<h2>SendGrid</h2>
+<h2>Apacheを起動</h2>
 
-<p>1日200通（無料）</p>
-
-<pre><code>$ heroku addons:add sendgrid:starter
+<pre><code>sudo apt-get install libapache2-mod-xsendfile
+sudo /etc/init.d/apache2 restart
 </code></pre>
 
-<h2>New Relic</h2>
-
-<p>パフォーマンス計測と運用状況のモニタリング</p>
-
-<pre><code>$ heroku addons:add newrelic:standard
-</code></pre>
-
-<p>Source: <a href="https://addons.heroku.com/">Heroku | Add-ons</a></p>
+<p>Sorce:
+<a href="https://github.com/teambox/teambox/wiki/Installing-on-Ubuntu-using-Apache-and-Unicorn">Installing on Ubuntu using Apache and Unicorn</a></p>
 </div>
 
 
@@ -173,12 +222,12 @@
   
 
 
-<time datetime="2012-06-11T00:47:00+09:00" pubdate data-updated="true">Jun 11<span>th</span>, 2012</time>
+<time datetime="2012-06-17T17:27:00+09:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/heroku/'>heroku</a>
+    <a class='category' href='/blog/categories/unicorn/'>unicorn</a>
   
 </span>
 
@@ -187,7 +236,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -200,10 +249,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/06/10/hello-octopress/" title="Previous Post: hello-octopress">&laquo; hello-octopress</a>
+        <a class="basic-alignment left" href="/blog/2012/06/17/redmine-install/" title="Previous Post: Ubuntu12.04にRedmine2.0をインストール">&laquo; Ubuntu12.04にRedmine2.0をインストール</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/06/11/hazimetefalseoctopress/" title="Next Post: はじめてのOctopress">はじめてのOctopress &raquo;</a>
       
     </p>
   </footer>
@@ -310,8 +357,8 @@ new TWTR.Widget({
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/';
-        var disqus_url = 'http://t-taira.github.com/blog/2012/06/11/herokufalsekomando%2C-add-onsfalsememo/';
+        var disqus_identifier = 'http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache/';
+        var disqus_url = 'http://t-taira.github.com/blog/2012/06/17/unicorn-plus-apache/';
         var disqus_script = 'embed.js';
       
     (function () {
