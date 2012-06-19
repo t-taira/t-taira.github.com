@@ -140,9 +140,7 @@ sudo /etc/init.d/apache2 restart
 
     &lt;Proxy balancer://railsapp&gt;
     BalancerMember http://127.0.0.1:3000 loadfactor=10
-    BalancerMember http://127.0.0.1:3001 loadfactor=10
-    BalancerMember http://127.0.0.1:3002 loadfactor=10
-&lt;/Proxy&gt;
+    &lt;/Proxy&gt;
 
 # Redirect all non-static requests to thin
 RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f

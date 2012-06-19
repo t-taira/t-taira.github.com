@@ -4,7 +4,7 @@
   <title><![CDATA[t.taira blog]]></title>
   <link href="http://t-taira.github.com/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-17T17:29:50+09:00</updated>
+  <updated>2012-06-19T10:08:27+09:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -48,9 +48,7 @@ sudo /etc/init.d/apache2 restart
 
     &lt;Proxy balancer://railsapp&gt;
     BalancerMember http://127.0.0.1:3000 loadfactor=10
-    BalancerMember http://127.0.0.1:3001 loadfactor=10
-    BalancerMember http://127.0.0.1:3002 loadfactor=10
-&lt;/Proxy&gt;
+    &lt;/Proxy&gt;
 
 # Redirect all non-static requests to thin
 RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
