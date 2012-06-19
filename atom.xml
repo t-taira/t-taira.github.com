@@ -4,7 +4,7 @@
   <title><![CDATA[t.taira blog]]></title>
   <link href="http://t-taira.github.com/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-19T10:09:47+09:00</updated>
+  <updated>2012-06-19T10:12:26+09:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -72,6 +72,7 @@ sudo /etc/init.d/apache2 restart
 <h2>Unicornの設定</h2>
 
 <pre><code>vim config/unicorn.conf
+
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
 # See also http://unicorn.bogomips.org/examples/unicorn.conf.rb for
 rails_env = 'production'
