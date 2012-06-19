@@ -142,22 +142,22 @@ sudo /etc/init.d/apache2 restart
     BalancerMember http://127.0.0.1:3000 loadfactor=10
     &lt;/Proxy&gt;
 
-# Redirect all non-static requests to thin
-RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-RewriteRule ^/(.*)$ balancer://railsapp%{REQUEST_URI} [P,QSA,L]
+    # Redirect all non-static requests to thin
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+    RewriteRule ^/(.*)$ balancer://railsapp%{REQUEST_URI} [P,QSA,L]
 
-ProxyPass / balancer://railsapp/
-ProxyPassReverse / balancer://railsapp/
-ProxyPreserveHost on
+    ProxyPass / balancer://railsapp/
+    ProxyPassReverse / balancer://railsapp/
+    ProxyPreserveHost on
 
-&lt;Proxy *&gt;
-    Order deny,allow
-    Allow from all
-&lt;/Proxy&gt;
+    &lt;Proxy *&gt;
+        Order deny,allow
+        Allow from all
+    &lt;/Proxy&gt;
 
-# Custom log file locations
-ErrorLog  /home/username/railsapp/log/error.log
-CustomLog /home/username/railsapp/access.log combined
+    # Custom log file locations
+    ErrorLog  /home/username/railsapp/log/error.log
+    CustomLog /home/username/railsapp/access.log combined
 &lt;/VirtualHost&gt;
 </code></pre>
 
