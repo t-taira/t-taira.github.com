@@ -4,7 +4,7 @@
   <title><![CDATA[t.taira blog]]></title>
   <link href="http://t-taira.github.com/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-26T07:28:01+09:00</updated>
+  <updated>2012-06-27T00:05:40+09:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -12,6 +12,121 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Padrino+MySQL+ARのアプリをHeorkuにデプロイする]]></title>
+    <link href="http://t-taira.github.com/blog/2012/06/26/padrino-plus-heroku/"/>
+    <updated>2012-06-26T23:47:00+09:00</updated>
+    <id>http://t-taira.github.com/blog/2012/06/26/padrino-plus-heroku</id>
+    <content type="html"><![CDATA[<p>「ビュッフェスタイル」な開発ができるということで、Padrinoを使ってみました。</p>
+
+<pre><code>$ gem install padrino
+
+$ padrino g project sandbox -t rspec -e erb -c sass -s jquery -d activerecord -a mysql -b
+
+$ cd sandbox
+$ padrino g admin # 管理画面を作成
+$ bundle install  
+
+$ padrino g model dog name:string
+$ padrino g admin_page dog
+
+$ padrino rake ar:create
+$ padrino rake ar:migrate
+$ padrino rake seed 
+
+$ padrino start
+</code></pre>
+
+<p>Herokuにデプロイ</p>
+
+<pre><code>$ git init
+$ git add .
+$ git commit -m "initial commit for app"
+
+$ heroku create
+$ git push heroku master
+</code></pre>
+
+<p>Herokuのデプロイ後にエラーになったので、<a href="http://www.padrinorb.com/guides/blog-tutorial">Guides Blog Tutorial - Padrino Ruby Web Framework</a>を参考にDB設定等を変更しました。</p>
+
+<pre><code>ERROR Mysql::Error: Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+</code></pre>
+
+<p>Gemfileに追加</p>
+
+<pre><code># Gemfile
+group :production do
+ gem 'pg'
+end
+</code></pre>
+
+<p>productionのDB設定を変更</p>
+
+<pre><code># config/database.rb
+postgres = URI.parse(ENV['DATABASE_URL'] || '')
+
+ActiveRecord::Base.configurations[:production] = {
+  :adapter  =&gt; 'postgresql',
+  :encoding =&gt; 'utf8',
+  :database =&gt; postgres.path[1..-1], 
+  :username =&gt; postgres.user,
+  :password =&gt; postgres.password,
+  :host     =&gt; postgres.host
+}
+</code></pre>
+
+<p>Rakefileを作成</p>
+
+<pre><code>$ padrino rake gen
+</code></pre>
+
+<p>Rakefileを確認</p>
+
+<pre><code># Rakefile
+require File.dirname(__FILE__) + '/config/boot.rb'
+require 'thor'
+require 'padrino-core/cli/rake'
+
+PadrinoTasks.init
+</code></pre>
+
+<p>Heroku dbマイグレート</p>
+
+<pre><code>$ heroku rake ar:migrate
+$ heroku rake seed
+</code></pre>
+
+<p>開発環境のDBをHerokuにpush</p>
+
+<pre><code>$ heroku db:push mysql://root:password@localhost/sandbox_development
+</code></pre>
+
+<p>ruby-1.9.3でheroku db:pushしたところ、エラーになったのでruby-1.9.2に変更しました。</p>
+
+<pre><code>accounts:        0% |                          
+Saving session to push_201206200143.dat..
+!!! Caught Server Exception
+HTTP CODE: 500
+Taps Server Error: PGError: ERROR:  time zone displacement out of range: "2012-06-26 12:00:00.000000+5894652000"
+</code></pre>
+
+<p>.rvmrcを新規作成</p>
+
+<pre><code># .rvmrc
+rvm 1.9.2
+</code></pre>
+
+<p>gem再インストール</p>
+
+<pre><code>gem install heroku sqlite3 taps
+bundle install
+</code></pre>
+
+<p>Source:
+<a href="http://www.padrinorb.com/guides/blog-tutorial">Guides Blog Tutorial - Padrino Ruby Web Framework</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[SVNのインポートコマンド]]></title>

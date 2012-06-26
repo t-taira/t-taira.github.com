@@ -9,7 +9,7 @@
   <meta name="author" content="t-taira">
 
   
-  <meta name="description" content="備忘録で書いておきます。 svn import Project http://[server ip]/svn/repos/Project -m "first import project" ">
+  <meta name="description" content="「ビュッフェスタイル」な開発ができるということで、Padrinoを使ってみました。 $ gem install padrino $ padrino g project sandbox -t rspec -e erb -c sass -s jquery -d activerecord -a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,150 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/26/padrino-plus-heroku/">Padrino+MySQL+ARのアプリをHeorkuにデプロイする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-26T23:47:00+09:00" pubdate data-updated="true">Jun 26<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/26/padrino-plus-heroku/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>「ビュッフェスタイル」な開発ができるということで、Padrinoを使ってみました。</p>
+
+<pre><code>$ gem install padrino
+
+$ padrino g project sandbox -t rspec -e erb -c sass -s jquery -d activerecord -a mysql -b
+
+$ cd sandbox
+$ padrino g admin # 管理画面を作成
+$ bundle install  
+
+$ padrino g model dog name:string
+$ padrino g admin_page dog
+
+$ padrino rake ar:create
+$ padrino rake ar:migrate
+$ padrino rake seed 
+
+$ padrino start
+</code></pre>
+
+<p>Herokuにデプロイ</p>
+
+<pre><code>$ git init
+$ git add .
+$ git commit -m "initial commit for app"
+
+$ heroku create
+$ git push heroku master
+</code></pre>
+
+<p>Herokuのデプロイ後にエラーになったので、<a href="http://www.padrinorb.com/guides/blog-tutorial">Guides Blog Tutorial - Padrino Ruby Web Framework</a>を参考にDB設定等を変更しました。</p>
+
+<pre><code>ERROR Mysql::Error: Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+</code></pre>
+
+<p>Gemfileに追加</p>
+
+<pre><code># Gemfile
+group :production do
+ gem 'pg'
+end
+</code></pre>
+
+<p>productionのDB設定を変更</p>
+
+<pre><code># config/database.rb
+postgres = URI.parse(ENV['DATABASE_URL'] || '')
+
+ActiveRecord::Base.configurations[:production] = {
+  :adapter  =&gt; 'postgresql',
+  :encoding =&gt; 'utf8',
+  :database =&gt; postgres.path[1..-1], 
+  :username =&gt; postgres.user,
+  :password =&gt; postgres.password,
+  :host     =&gt; postgres.host
+}
+</code></pre>
+
+<p>Rakefileを作成</p>
+
+<pre><code>$ padrino rake gen
+</code></pre>
+
+<p>Rakefileを確認</p>
+
+<pre><code># Rakefile
+require File.dirname(__FILE__) + '/config/boot.rb'
+require 'thor'
+require 'padrino-core/cli/rake'
+
+PadrinoTasks.init
+</code></pre>
+
+<p>Heroku dbマイグレート</p>
+
+<pre><code>$ heroku rake ar:migrate
+$ heroku rake seed
+</code></pre>
+
+<p>開発環境のDBをHerokuにpush</p>
+
+<pre><code>$ heroku db:push mysql://root:password@localhost/sandbox_development
+</code></pre>
+
+<p>ruby-1.9.3でheroku db:pushしたところ、エラーになったのでruby-1.9.2に変更しました。</p>
+
+<pre><code>accounts:        0% |                          
+Saving session to push_201206200143.dat..
+!!! Caught Server Exception
+HTTP CODE: 500
+Taps Server Error: PGError: ERROR:  time zone displacement out of range: "2012-06-26 12:00:00.000000+5894652000"
+</code></pre>
+
+<p>.rvmrcを新規作成</p>
+
+<pre><code># .rvmrc
+rvm 1.9.2
+</code></pre>
+
+<p>gem再インストール</p>
+
+<pre><code>gem install heroku sqlite3 taps
+bundle install
+</code></pre>
+
+<p>Source:
+<a href="http://www.padrinorb.com/guides/blog-tutorial">Guides Blog Tutorial - Padrino Ruby Web Framework</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -719,6 +863,10 @@ hello octopress
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/06/26/padrino-plus-heroku/">Padrino+MySQL+ARのアプリをHeorkuにデプロイする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/19/svn-import/">SVNのインポートコマンド</a>
       </li>
     
@@ -734,15 +882,11 @@ hello octopress
         <a href="/blog/2012/06/17/ubuntu12-dot-04-subversion-install/">Ubuntu12.04にsubversionをインストール</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012/06/16/ubuntu12-dot-04nirorhuan-jing-wogou-zhu-suru/">Ubuntu12.04にRoR環境を構築する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 130.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 130.0%'>octopress(1)</a> <a href='/blog/categories/rails' style='font-size: 130.0%'>rails(1)</a> <a href='/blog/categories/redmine' style='font-size: 130.0%'>redmine(1)</a> <a href='/blog/categories/subversion' style='font-size: 160.0%'>subversion(2)</a> <a href='/blog/categories/test' style='font-size: 130.0%'>test(1)</a> <a href='/blog/categories/unicorn' style='font-size: 130.0%'>unicorn(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 130.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 130.0%'>octopress(1)</a> <a href='/blog/categories/padrino' style='font-size: 130.0%'>padrino(1)</a> <a href='/blog/categories/rails' style='font-size: 130.0%'>rails(1)</a> <a href='/blog/categories/redmine' style='font-size: 130.0%'>redmine(1)</a> <a href='/blog/categories/subversion' style='font-size: 160.0%'>subversion(2)</a> <a href='/blog/categories/test' style='font-size: 130.0%'>test(1)</a> <a href='/blog/categories/unicorn' style='font-size: 130.0%'>unicorn(1)</a> </span>
 </section>
 
 <section>
