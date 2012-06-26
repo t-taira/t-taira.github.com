@@ -4,7 +4,7 @@
   <title><![CDATA[Category: padrino | t.taira blog]]></title>
   <link href="http://t-taira.github.com/blog/categories/padrino/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-06-27T00:05:40+09:00</updated>
+  <updated>2012-06-27T00:17:36+09:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -122,6 +122,20 @@ rvm 1.9.2
 <pre><code>gem install heroku sqlite3 taps
 bundle install
 </code></pre>
+
+<ul>
+<li>ログイン画面</li>
+</ul>
+
+
+<p><img src="https://dl.dropbox.com/u/29480473/octopress/padri-no-login.png"></p>
+
+<ul>
+<li>管理画面</li>
+</ul>
+
+
+<p><img src="https://dl.dropbox.com/u/29480473/octopress/padrino-admin.png"></p>
 
 <p>Source:
 <a href="http://www.padrinorb.com/guides/blog-tutorial">Guides Blog Tutorial - Padrino Ruby Web Framework</a></p>
