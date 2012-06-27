@@ -326,9 +326,9 @@ sudo /etc/init.d/apache2 restart
 <pre><code>#/etc/apache2/conf.d/railsapp.conf
 
 &lt;VirtualHost *:80&gt;
-    ServerAdmin admin@example.co.jp
-    ServerName example.co.jp       
-    DocumentRoot /home/username/railsapp/public
+    ServerAdmin admin@localhost
+    ServerName localhost
+    DocumentRoot /home/username/railsapp/current/public
 
     ProxyRequests Off
 
@@ -339,7 +339,12 @@ sudo /etc/init.d/apache2 restart
 
     ProxyPass / http://localhost:3000/
     ProxyPassReverse / http://localhost:3000/
+
+    # Custom log file locations
+    ErrorLog  /home/username/railsapp/shared/log/error.log
+    CustomLog /home/username/railsapp/shared/log/access.log combined
 &lt;/VirtualHost&gt;
+~
 </code></pre>
 
 <h2>Unicornの設定</h2>
