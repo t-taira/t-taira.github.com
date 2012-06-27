@@ -323,43 +323,28 @@ sudo /etc/init.d/apache2 restart
 
 <h2>Apacheの設定</h2>
 
-<pre><code>sudo vim /etc/apache2/conf.d/railsapp.conf
+<pre><code>#/etc/apache2/conf.d/railsapp.conf
 
 &lt;VirtualHost *:80&gt;
-    ServerName domain.com       
-    ServerAlias www.domain.com
-
-    # Point this to your public folder of teambox
+    ServerAdmin admin@example.co.jp
+    ServerName example.co.jp       
     DocumentRoot /home/username/railsapp/public
 
-    RewriteEngine On
-
-    &lt;Proxy balancer://railsapp&gt;
-    BalancerMember http://127.0.0.1:3000 loadfactor=10
-    &lt;/Proxy&gt;
-
-    # Redirect all non-static requests to thin
-    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-    RewriteRule ^/(.*)$ balancer://railsapp%{REQUEST_URI} [P,QSA,L]
-
-    ProxyPass / balancer://railsapp/
-    ProxyPassReverse / balancer://railsapp/
-    ProxyPreserveHost on
+    ProxyRequests Off
 
     &lt;Proxy *&gt;
         Order deny,allow
         Allow from all
     &lt;/Proxy&gt;
 
-    # Custom log file locations
-    ErrorLog  /home/username/railsapp/log/error.log
-    CustomLog /home/username/railsapp/access.log combined
+    ProxyPass / http://localhost:3000/
+    ProxyPassReverse / http://localhost:3000/
 &lt;/VirtualHost&gt;
 </code></pre>
 
 <h2>Unicornの設定</h2>
 
-<pre><code>vim config/unicorn.conf
+<pre><code>#config/unicorn.conf
 
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html for complete
 # See also http://unicorn.bogomips.org/examples/unicorn.conf.rb for
