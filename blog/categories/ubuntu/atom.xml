@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ubuntu | t.taira blog]]></title>
   <link href="http://t-taira.github.com/blog/categories/ubuntu/atom.xml" rel="self"/>
   <link href="http://t-taira.github.com/"/>
-  <updated>2012-09-02T16:56:30+09:00</updated>
+  <updated>2012-09-02T17:15:27+09:00</updated>
   <id>http://t-taira.github.com/</id>
   <author>
     <name><![CDATA[t-taira]]></name>
@@ -40,9 +40,9 @@
 
 <pre><code>$ sudo apt-get install samba
 
-$ sudo smbpasswd -a haladmin
-$ sudo mkdir /home/haladmin/samba
-$ sudo chmod 777 /home/haladmin/samba
+$ sudo smbpasswd -a takao
+$ sudo mkdir /home/takao/samba
+$ sudo chmod 777 /home/takao/samba
 
 $ sudo nano /etc/samba/smb.conf 
 
