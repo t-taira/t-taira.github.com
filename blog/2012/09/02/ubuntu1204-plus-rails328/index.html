@@ -1,0 +1,678 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ubuntu12.04 + Rails3.2.8で開発環境を作る - t.taira blog</title>
+  <meta name="author" content="t-taira">
+
+  
+  <meta name="description" content="Railsの新しい環境を作成した時のメモ。以下、苦労したところ。 nginx + unicornの連携
+capistranoの設定まわり ssh $ sudo apt-get install openssh-server pkg $ sudo apt-get install samba &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://t-taira.github.com/blog/2012/09/02/ubuntu1204-plus-rails328/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="t.taira blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-32549163-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">t.taira blog</a></h1>
+  
+    <h2>Java, Ruby, PHP Programming Fun.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:t-taira.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ubuntu12.04 + Rails3.2.8で開発環境を作る</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-02T16:24:00+09:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Railsの新しい環境を作成した時のメモ。以下、苦労したところ。<br/></p>
+
+<ul>
+<li>nginx + unicornの連携</li>
+<li>capistranoの設定まわり</li>
+</ul>
+
+
+<h2>ssh</h2>
+
+<pre><code>$ sudo apt-get install openssh-server
+</code></pre>
+
+<h2>pkg</h2>
+
+<pre><code>$ sudo apt-get install samba nodejs libxslt-dev libxml2-dev vim curl build-essential bison openssl libreadline5 libreadline-dev zlib1g zlib1g-dev libssl-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev 
+</code></pre>
+
+<h2>samba</h2>
+
+<pre><code>$ sudo apt-get install samba
+
+$ sudo smbpasswd -a haladmin
+$ sudo mkdir /home/haladmin/samba
+$ sudo chmod 777 /home/haladmin/samba
+
+$ sudo nano /etc/samba/smb.conf 
+
+/etc/samba/smb.conf
+
+workgroup = WORKGROUP
+hosts allow = 192.168.1. 127.
+[homes]
+browseable = no
+writable = yes
+create mask = 0744
+directory mask = 0755
+path = /home/takao/samba
+guest ok = yes 
+share modes = no
+
+$ sudo /etc/init.d/smbd restart
+</code></pre>
+
+<h2>rvm</h2>
+
+<pre><code>$ curl -L get.rvm.io | bash -s stable
+$ source ~/.rvm/scripts/rvm
+$ rvm requirements
+$ rvm install 1.9.3
+$ rvm use 1.9.3 --default
+
+$ ruby -v
+ruby 1.9.3p194 (2012-04-20 revision 35410) [x86_64-linux]
+
+$ gem -v
+1.8.24
+</code></pre>
+
+<h2>.gemrc</h2>
+
+<pre><code>$ vim ~/.gemrc 
+gem: --no-ri --no-rdoc
+</code></pre>
+
+<h2>rails</h2>
+
+<pre><code>$ gem install rails
+$ rails new sample
+$ cd sample 
+
+$ vim .rvmrc 
+rvm use 1.9.3@global
+rvm_trust_rvmrcs_flag=1
+
+$ vim .svnignore 
+nbproject
+log/*
+tmp/*
+config/database.yml
+public/assets
+._.*
+.
+db/*.sqlite3
+
+$ rails g controller welcome index
+</code></pre>
+
+<h2>gem</h2>
+
+<pre><code>$ vim Gemfile
+source 'https://rubygems.org'
+
+gem 'rails', '3.2.8'
+
+# Bundle edge Rails instead:
+# gem 'rails', :git =&gt; 'git://github.com/rails/rails.git'
+
+gem 'sqlite3'
+
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~&gt; 3.2.3'
+  gem 'coffee-rails', '~&gt; 3.2.1'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer', :platforms =&gt; :ruby
+
+  gem 'uglifier', '&gt;= 1.0.3'
+end
+
+gem 'jquery-rails'
+
+# To use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~&gt; 3.0.0'
+
+# To use Jbuilder templates for JSON
+# gem 'jbuilder'
+
+# Use unicorn as the app server
+gem 'unicorn'
+
+# Deploy with Capistrano
+group :deployment do
+  gem 'capistrano'
+  gem 'capistrano_colors'
+  gem 'rvm-capistrano'
+end
+
+# To use debugger
+# gem 'debugger'
+
+gem 'execjs'
+gem 'therubyracer'
+gem 'mysql2'
+gem 'nokogiri'
+gem 'i18n_generators'
+gem 'selectable_attr'
+gem 'whenever', :require =&gt; false
+gem 'acts-as-taggable-on'
+gem 'settingslogic'
+gem 'devise'
+gem 'kaminari'
+gem 'meta_search'
+gem 'rails3_acts_as_paranoid'
+gem 'httpclient'
+gem 'rspec-rails'
+gem 'net-ssh-gateway'
+gem 'bigdecimal'
+gem 'io-console'
+gem 'json'
+gem 'minitest'
+gem 'rake'
+gem 'rdoc'
+gem 'addressable'
+gem 'delayed_job_active_record'
+
+# Heroku :
+group :production do
+  gem 'thin'
+  gem 'pg'
+end
+</code></pre>
+
+<h2>unicorn</h2>
+
+<pre><code>$ vim config/unicorn.rb 
+application = 'sample'
+
+listen "/tmp/unicorn_#{application}.sock"
+pid "/tmp/unicorn_#{application}.pid"
+
+worker_processes 4;
+timeout 30
+preload_app true
+
+if ENV['RAILS_ENV'] == 'production'
+  shared_path = "/home/takao/capistrano//#{application}/shared"
+  stderr_path "#{shared_path}/log/unicorn.stderr.log"
+  stdout_path "#{shared_path}/log/unicorn.stdout.log"
+end
+
+before_fork do |server, worker|
+  # マスタープロセスの接続を解除
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.connection.disconnect!
+  end
+  # 古いマスタープロセスをKILL
+  old_pid = "/tmp/unicorn.pid.oldbin"
+  if File.exists?(old_pid) &amp;&amp; server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+      # someone else did our job for us
+    end
+  end
+end
+
+after_fork do |server, worker|
+  # preload_app=trueの場合は必須
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.establish_connection
+  end
+end
+</code></pre>
+
+<h2>nginx</h2>
+
+<pre><code>sudo apt-get install nginx
+
+$ vim /etc/nginx/sites-available/sample 
+upstream unicorn_app {
+  server unix:/tmp/unicorn_sample.sock fail_timeout=0;
+}
+server {
+    listen 80;
+    server_name _;
+
+    root /home/takao/capistrano/sample/current/public;
+    access_log /var/log/nginx/sample_log;
+    rewrite_log on;
+
+    location / {
+        # 全リクエストをUNIX socketへ
+        proxy_pass  http://unicorn_app;
+        proxy_redirect     off;
+
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+        client_max_body_size       10m;
+        client_body_buffer_size    128k;
+
+        proxy_connect_timeout      90;
+        proxy_send_timeout         90;
+        proxy_read_timeout         90;
+
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+    }
+
+    location ~* \.(ico|css|js|gif|jpe?g|png)(\?[0-9]+)?$ {
+      expires 1y;
+      add_header Cache-Control public;
+
+      # http://guides.rubyonrails.org/asset_pipeline.html#server-configuration
+      add_header Last-Modified "";
+      add_header ETag "";
+    }
+
+    # Rails 3.1's asset pipe_line用に何か必要かもしれないらしい..
+    #location ~ ^/(images|javascripts|stylesheets|system)/  {
+    #  root /var/www/sample/current/public;
+    #  expires max;
+    #  break;
+    #}
+}
+
+$ cd /etc/nginx/sites-enabled/
+$ sudo ls -s /etc/nginx/sites-available
+</code></pre>
+
+<h2>mysql</h2>
+
+<pre><code>sudo apt-get install mysql-server libmysqlclient-dev libmysql-ruby
+sudo apt-get install libpq-dev
+</code></pre>
+
+<h2>svn</h2>
+
+<pre><code>&lt;Location /repos/takao&gt;
+   DAV svn
+   SVNPath /var/www/svn/takao
+
+   AuthType Basic
+   AuthName "Authorization Realm (hal-new/takao)" 
+   AuthUserFile /var/www/svn/.svnpasswd
+   Require valid-user
+&lt;/Location&gt;
+
+$ svn co http://xxx.xxx.xxx.xxx/svn/takao
+</code></pre>
+
+<h2>capistrano</h2>
+
+<pre><code>$ capify .
+
+$ cat config/deploy.rb 
+# capistranoの出力がカラーになる
+require 'capistrano_colors'
+
+# cap deploy時に自動で bundle install が実行される
+require "bundler/capistrano"
+
+# RVMを利用している場合は必要
+#$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
+require 'rvm/capistrano'
+set :rvm_ruby_string, '1.9.3'
+set :rvm_type, :user
+
+# リポジトリの設定
+set :application, "sample"
+set :scm, :subversion
+set :repository,  "http://xxx.xxx.xxx.xxx/repos/takao/sample"
+set :scm_username, "takao"
+set :scm_password, "takao"
+
+set :deploy_via, :remote_cache
+#set :deploy_to, "/var/www/#{application}"
+set :deploy_to, "/home/haladmin/capistrano/#{application}"
+set :rails_env, "production"
+set :keep_releases, 5
+
+# SSHの設定
+set :user, "xxxxxx"
+set :password, "xxxxxx"
+ssh_options[:port] = "22"
+ssh_options[:forward_agent] = true
+default_run_options[:pty] = true
+
+# role (全部同じIPでOK)
+role :web, "127.0.0.1"
+role :app, "127.0.0.1"
+role :db,  "127.0.0.1", :primary =&gt; true
+
+# precompile
+load 'deploy/assets'
+
+# cap deploy:setup 後、/var/www/sample の権限変更
+namespace :setup do
+  task :fix_permissions do
+    sudo "chown -R #{user}.#{user} #{deploy_to}"
+  end
+end
+after "deploy:setup", "setup:fix_permissions"
+
+# Unicorn用に起動/停止タスクを変更
+namespace :deploy do
+  task :start, :roles =&gt; :app do
+    run "cd #{current_path}; bundle exec unicorn_rails -c config/unicorn.rb -E #{rails_env} -D"
+  end
+  task :restart, :roles =&gt; :app do
+    if File.exist? "/tmp/unicorn_#{application}.pid"
+      run "kill -s USR2 `cat /tmp/unicorn_#{application}.pid`"
+    end
+  end
+  task :stop, :roles =&gt; :app do
+    run "kill -s QUIT `cat /tmp/unicorn_#{application}.pid`"
+  end
+end
+
+$ cap deploy:setup
+
+
+$ cap deploy:start
+$ cap deploy:stop
+</code></pre>
+
+<p>:Source http://d.hatena.ne.jp/ntaku/20111115/1321358900</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">t-taira</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-02T16:24:00+09:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://t-taira.github.com/blog/2012/09/02/ubuntu1204-plus-rails328/" data-via="t_taira" data-counturl="http://t-taira.github.com/blog/2012/09/02/ubuntu1204-plus-rails328/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/06/26/padrino-plus-heroku/" title="Previous Post: Padrino+MySQL+ARのアプリをHeorkuにデプロイする">&laquo; Padrino+MySQL+ARのアプリをHeorkuにデプロイする</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <div><img src="https://dl.dropbox.com/u/29480473/profile.jpg"></div>  
+  <p>Java, Ruby, PHPプログラマ改めService Designerです。
+不動産投資にも興味があります。夢は一棟マンションの大家さん。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/09/02/ubuntu1204-plus-rails328/">Ubuntu12.04 + Rails3.2.8で開発環境を作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/26/padrino-plus-heroku/">Padrino+MySQL+ARのアプリをHeorkuにデプロイする</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/19/svn-import/">SVNのインポートコマンド</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/17/unicorn-plus-apache/">Unicorn+ApacheでRailsを動かす</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/17/redmine-install/">Ubuntu12.04にRedmine2.0をインストール</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/heroku' style='font-size: 130.0%'>heroku(1)</a> <a href='/blog/categories/octopress' style='font-size: 130.0%'>octopress(1)</a> <a href='/blog/categories/padrino' style='font-size: 130.0%'>padrino(1)</a> <a href='/blog/categories/rails' style='font-size: 130.0%'>rails(1)</a> <a href='/blog/categories/redmine' style='font-size: 130.0%'>redmine(1)</a> <a href='/blog/categories/subversion' style='font-size: 160.0%'>subversion(2)</a> <a href='/blog/categories/test' style='font-size: 130.0%'>test(1)</a> <a href='/blog/categories/ubuntu' style='font-size: 130.0%'>ubuntu(1)</a> <a href='/blog/categories/unicorn' style='font-size: 130.0%'>unicorn(1)</a> </span>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+<script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 30000,
+  width: 250,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#fff',
+      color: '#333'
+    },
+    tweets: {
+      background: '#fff',
+      color: '#333',
+      links: '#990000'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    behavior: 'all'
+  }
+}).render().setUser('t_taira').start();
+</script>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - t-taira -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'ttairablog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://t-taira.github.com/blog/2012/09/02/ubuntu1204-plus-rails328/';
+        var disqus_url = 'http://t-taira.github.com/blog/2012/09/02/ubuntu1204-plus-rails328/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
